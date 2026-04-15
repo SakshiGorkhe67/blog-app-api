@@ -1,5 +1,6 @@
 package com.codewithdurgesh.blog.contollers;
 
+import com.codewithdurgesh.blog.payloads.ApiResponse;
 import com.codewithdurgesh.blog.payloads.CategoryDto;
 import com.codewithdurgesh.blog.services.CategoryService;
 import jakarta.validation.Valid;
@@ -36,6 +37,15 @@ public class CategoryController {
     }
 
     //*********************** GetCategoryById ********************************
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryDto> GetCategoryById( @PathVariable Integer categoryId){
+        return ResponseEntity.ok(this.categoryService.getCategory(categoryId));
+    }
 
-    public ResponseEntity<CategoryDto> GetCategoryById()
+    //************************ Delete Category ******************************
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer categoryId){
+        this.categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<ApiResponse>(new ApiResponse("Category Deleted Successfully",true),HttpStatus.OK) ;
+    }
 }
