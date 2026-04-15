@@ -20,33 +20,33 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    //========================Create User===============================
+    //********************** Create User **************************
     @PostMapping("/")
     public ResponseEntity<UserDto> crateUser(@Valid @RequestBody UserDto userDto){
         UserDto createduserDto=this.userService.createUser(userDto);
         return  new ResponseEntity<>(createduserDto, HttpStatus.CREATED);
     }
 
-    //=======================Update User==============================
+    //************************** Update User **************************
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,@PathVariable Integer userId){
        UserDto updatedUser= this.userService.updateUser(userDto,userId);
        return  ResponseEntity.ok(updatedUser);
     }
-    //===============================DeleteUser========================
+    //******************************* DeleteUser *************************
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponse>deleteUser(@PathVariable Integer userId){
          this.userService.deleteUser(userId);
          return new ResponseEntity<ApiResponse>(new ApiResponse("User deleted succesfully",true),HttpStatus.OK);
     }
 
-    //======================Get All User=================================
+    //****************************** Get All User **********************
     @GetMapping("/")
     public ResponseEntity<List<UserDto>> getAllUsers(){
         return ResponseEntity.ok(this.userService.getAllUsers());
     }
 
-    //======================Get Uset by ID=============
+    //************************* Get User by ID ************************
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId){
        return ResponseEntity.ok( this.userService.getUserById(userId));
