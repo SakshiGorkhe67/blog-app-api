@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.codewithdurgesh.blog.repositories.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.codewithdurgesh.blog.entities.*;
 import com.codewithdurgesh.blog.exceptions.*;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class userServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
 //=====================Create User==================================
     @Override
@@ -59,23 +62,14 @@ public class userServiceImpl implements UserService {
        User user= this.userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
         this.userRepository.delete(user);
     }
+    //================ Using ModelMapper Library============================
     private User dtoToUser(UserDto userDto){
-        User user=new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setAbout(userDto.getAbout());
-
+        User user=this.modelMapper.map(userDto,User.class);
         return user;
     }
     private UserDto UserToDto(User user){
-        UserDto userDto=new UserDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setAbout(user.getAbout());
-        userDto.setPassword(user.getPassword());
+        UserDto userDto=this.modelMapper.map(user,UserDto.class);
         return userDto ;
+
     }
 }
