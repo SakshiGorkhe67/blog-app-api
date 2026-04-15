@@ -18,12 +18,14 @@ public class categoryServiceImpl implements CategoryService{
     private ModelMapper modelMapper;
 
     @Override
+
+    //create Category
     public CategoryDto createCategory(CategoryDto categoryDto) {
        Category cat= this.modelMapper.map(categoryDto, Category.class);
        Category addedCategory=this.categoryReporitory.save(cat);
        return this.modelMapper.map(addedCategory,CategoryDto.class);
     }
-
+    //*********************** UpdateCategory ***********************
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto, Integer categoryId) {
         Category cat=this.categoryReporitory.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category","Category Id",categoryId));
@@ -32,21 +34,21 @@ public class categoryServiceImpl implements CategoryService{
         Category updatedCategory=this.categoryReporitory.save(cat);
         return this.modelMapper.map(updatedCategory,CategoryDto.class);
     }
-
+    //************************** GetAllCategory ******************************
     @Override
     public List<CategoryDto> getAllCategory() {
         List<Category> categories=this.categoryReporitory.findAll() ;
         List<CategoryDto> categoryDtos=categories.stream().map((cat)->this.modelMapper.map(cat,CategoryDto.class)).collect(Collectors.toList());
         return categoryDtos;
     }
-
+    //************************** GetCategoryById **************************
     @Override
     public CategoryDto getCategory(Integer categoryId) {
      Category cat=this.categoryReporitory.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category","Category Id",categoryId));
         return this.modelMapper.map(cat,CategoryDto.class);
 
     }
-
+    //********************DeleteCategory*****************************
     @Override
     public void deleteCategory(Integer categoryId) {
         Category cat=this.categoryReporitory.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category","Category Id",categoryId));
