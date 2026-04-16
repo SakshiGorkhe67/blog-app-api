@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostServiceImpl implements PostService {
     @Autowired
@@ -27,26 +29,26 @@ public class PostServiceImpl implements PostService {
     private CategoryReporitory categoryReporitory;
     //***************************Create Post ********************************
     @Override
-    public PostDto createPost(PostDto postDto, Integer userId, Integer categoryId) {
-
-        User user = this.userRepository.findById(userId)
+    public PostDto createPost(PostDto postDto, Integer userId, Integer categoryId)
+        {
+            User user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Category category = this.categoryReporitory.findById(categoryId)
+            Category category = this.categoryReporitory.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        Post post = this.modelMapper.map(postDto, Post.class);
+            Post post = this.modelMapper.map(postDto, Post.class);
 
 
-        post.setUser(user);
-        post.setCategory(category);
-        post.setAddDate(java.time.LocalDateTime.now());
-        post.setImageName("default.png");
+             post.setUser(user);
+             post.setCategory(category);
+             post.setAddDate(java.time.LocalDateTime.now());
+             post.setImageName("default.png");
 
-        Post savedPost = this.postRepository.save(post);
+             Post savedPost = this.postRepository.save(post);
 
-        return this.modelMapper.map(savedPost, PostDto.class);
-    }
+             return this.modelMapper.map(savedPost, PostDto.class);
+        }
 
     //*************************** Update Post ********************************
     @Override
@@ -54,10 +56,6 @@ public class PostServiceImpl implements PostService {
         Post post=this.postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post","PostId",postId));
         post.setTitle(postDto.getTitle());
         post.setContent((post.getContent()));
-
-
-
-
         return null;
     }
 
@@ -79,15 +77,36 @@ public class PostServiceImpl implements PostService {
         return null;
     }
 
+
     //*************************** Get Post By Category ********************************
+
     @Override
     public List<PostDto> getPostByCategory(Integer categoryId) {
-        return List.of();
+      Category category=this.categoryReporitory.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category","categoryId",categoryId));
+      List<Post>posts =this.postRepository.findByCategory(category);
+      List<PostDto> postDtos=posts.stream().map((post)->this.modelMapper.map(posts,PostDto.class)).collect(Collectors.toList());
+      return postDtos;
     }
 
     // //*************************** Get  Post By User  ********************************
     @Override
     public List<PostDto> getPostByUser(Integer userId) {
-        return List.of();
+        User user=this.userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","userId",userId));
+        List<Post>posts=this.postRepository.findByUser(user);
+    List<PostDto>postDtos=posts.stream().map((post)->this.modelMapper.map(posts,PostDto.class)).collect(Collectors.toList());
+
+        return postDtos;
     }
-}
+    }
+
+
+
+
+
+
+
+
+
+
+
+
