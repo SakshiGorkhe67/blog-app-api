@@ -17,7 +17,7 @@ public class PostController {
      private PostService postService;
 
  //********************************  Create User ********************************
-    @PostMapping("/user/{userId}/category/{categoryId}/post")
+    @PostMapping("/user/{userId}/category/{categoryId}/posts")
     public ResponseEntity<PostDto> createPost(
             @RequestBody PostDto postDto,
             @PathVariable Integer userId,
@@ -28,14 +28,14 @@ public class PostController {
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
     //*********************** Get By UserId **********************************8
-    @GetMapping("/user/{userId}/posts")
+    @GetMapping("user/{userId}/posts")
     public ResponseEntity<List<PostDto>> getPostByUserId(@PathVariable Integer userId){
        List<PostDto>posts= this.postService.getPostByUser(userId);
        return new ResponseEntity<List<PostDto>>(posts,HttpStatus.OK);
     }
 
     //***************** Get By User Id **********************************8
-    @GetMapping("/category/{categoryId}/posts")
+    @GetMapping("category/{categoryId}/posts")
     public ResponseEntity<List<PostDto>> getPostByCategoryId(@PathVariable Integer categoryId){
         List<PostDto> posts=this.postService.getPostByCategory(categoryId);
         return new ResponseEntity<List<PostDto>>(posts,HttpStatus.OK);
