@@ -22,7 +22,7 @@ public interface PostService {
 
     //Get post by id
 
-    Post getPostById(Integer postId);
+    PostDto getPostById(Integer postId);
 
     //Get all post by Category
 
