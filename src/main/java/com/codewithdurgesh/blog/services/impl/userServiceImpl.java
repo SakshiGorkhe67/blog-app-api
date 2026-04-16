@@ -59,7 +59,7 @@ public class userServiceImpl implements UserService {
 //=========================DeleteUser==========================
     @Override
     public void deleteUser(Integer userId) {
-       User user= this.userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
+        User user= this.userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
         this.userRepository.delete(user);
     }
     //================ Using ModelMapper Library============================
