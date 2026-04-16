@@ -2,6 +2,7 @@ package com.codewithdurgesh.blog.services;
 
 import com.codewithdurgesh.blog.entities.Post;
 import com.codewithdurgesh.blog.payloads.PostDto;
+import com.codewithdurgesh.blog.payloads.PostResponse;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface PostService {
     String deletePost(Integer postId);
 
     //Get all post
-    List<PostDto> getAllPost(Integer pageNumber,Integer pageSize);
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize);
 
     //Get post by id
 

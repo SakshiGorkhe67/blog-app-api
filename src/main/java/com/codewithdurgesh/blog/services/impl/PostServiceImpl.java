@@ -5,6 +5,7 @@ import com.codewithdurgesh.blog.entities.Post;
 import com.codewithdurgesh.blog.entities.User;
 import com.codewithdurgesh.blog.exceptions.ResourceNotFoundException;
 import com.codewithdurgesh.blog.payloads.PostDto;
+import com.codewithdurgesh.blog.payloads.PostResponse;
 import com.codewithdurgesh.blog.repositories.CategoryReporitory;
 import com.codewithdurgesh.blog.repositories.PostRepository;
 import com.codewithdurgesh.blog.repositories.UserRepository;
@@ -77,7 +78,7 @@ public class PostServiceImpl implements PostService {
 
     //*************************** Get All Post ********************************
     @Override
-    public List<PostDto> getAllPost(Integer pageNumber,Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
 
         Pageable p= PageRequest.of(pageNumber,pageSize);
         Page<Post> pagePost=this.postRepository.findAll(p);
@@ -87,7 +88,16 @@ public class PostServiceImpl implements PostService {
         List<PostDto> postDtos= allPost.stream()
                 .map((post)->this.modelMapper.map(post,PostDto.class))
                 .toList();
-        return postDtos;
+        PostResponse postResponse=new PostResponse();
+        postResponse.setContent(postDtos);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotleElements(pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+
+
+        return postResponse;
     }
 
     //*************************** Get Post By ID  ********************************
