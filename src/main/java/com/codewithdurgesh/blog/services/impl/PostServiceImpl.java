@@ -1,0 +1,93 @@
+package com.codewithdurgesh.blog.services.impl;
+
+import com.codewithdurgesh.blog.entities.Category;
+import com.codewithdurgesh.blog.entities.Post;
+import com.codewithdurgesh.blog.entities.User;
+import com.codewithdurgesh.blog.exceptions.ResourceNotFoundException;
+import com.codewithdurgesh.blog.payloads.PostDto;
+import com.codewithdurgesh.blog.repositories.CategoryReporitory;
+import com.codewithdurgesh.blog.repositories.PostRepository;
+import com.codewithdurgesh.blog.repositories.UserRepository;
+import com.codewithdurgesh.blog.services.PostService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+@Service
+public class PostServiceImpl implements PostService {
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CategoryReporitory categoryReporitory;
+    //***************************Create Post ********************************
+    @Override
+    public PostDto createPost(PostDto postDto, Integer userId, Integer categoryId) {
+
+        User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Category category = this.categoryReporitory.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        Post post = this.modelMapper.map(postDto, Post.class);
+
+
+        post.setUser(user);
+        post.setCategory(category);
+        post.setAddDate(java.time.LocalDateTime.now());
+        post.setImageName("default.png");
+
+        Post savedPost = this.postRepository.save(post);
+
+        return this.modelMapper.map(savedPost, PostDto.class);
+    }
+
+    //*************************** Update Post ********************************
+    @Override
+    public PostDto updatePost(PostDto postDto, Integer postId) {
+        Post post=this.postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post","PostId",postId));
+        post.setTitle(postDto.getTitle());
+        post.setContent((post.getContent()));
+
+
+
+
+        return null;
+    }
+
+    //*************************** Delete Post ********************************
+    @Override
+    public void deletePost(Integer postId) {
+
+    }
+
+    //*************************** Get All Post ********************************
+    @Override
+    public List<PostDto> getAllPost() {
+        return List.of();
+    }
+
+    //*************************** Get Post By ID  ********************************
+    @Override
+    public Post getPostById(Integer postId) {
+        return null;
+    }
+
+    //*************************** Get Post By Category ********************************
+    @Override
+    public List<PostDto> getPostByCategory(Integer categoryId) {
+        return List.of();
+    }
+
+    // //*************************** Get  Post By User  ********************************
+    @Override
+    public List<PostDto> getPostByUser(Integer userId) {
+        return List.of();
+    }
+}
