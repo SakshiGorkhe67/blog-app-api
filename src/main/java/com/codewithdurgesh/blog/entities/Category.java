@@ -23,7 +23,7 @@ public class Category {
     @Column(name="description")
     private String categoryDescription;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
-    private List<Post> posts=new ArrayList<>();
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
 }
