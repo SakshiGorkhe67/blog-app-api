@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class FileServiceImpl implements FileService {
     @Override
-    public String uploadImage(String path, MultipartFile file) throws IOException {
+    public String uploadPostImag(String path, MultipartFile file) throws IOException {
 
         //File name
         String name=file.getOriginalFilename();

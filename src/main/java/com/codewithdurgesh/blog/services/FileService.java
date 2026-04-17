@@ -9,7 +9,7 @@ import java.io.InputStream;
 public interface FileService {
 
     //Upload Image
-    String uploadImage(String path, MultipartFile file)throws IOException;
+    String uploadPostImag(String path, MultipartFile file)throws IOException;
 
     //Serve Image
     InputStream getResource(String path,String fileName)throws FileNotFoundException;

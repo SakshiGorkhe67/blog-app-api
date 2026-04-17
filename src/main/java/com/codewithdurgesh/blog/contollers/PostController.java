@@ -5,11 +5,14 @@ import com.codewithdurgesh.blog.entities.Post;
 import com.codewithdurgesh.blog.payloads.ApiResponse;
 import com.codewithdurgesh.blog.payloads.PostDto;
 import com.codewithdurgesh.blog.payloads.PostResponse;
+import com.codewithdurgesh.blog.services.FileService;
 import com.codewithdurgesh.blog.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,6 +21,10 @@ import java.util.List;
 public class PostController {
     @Autowired
      private PostService postService;
+    @Autowired
+    private FileService fileService;
+    @Value("${project.image}")
+    private  String path;
 
  //********************************  Create User ********************************
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
@@ -85,4 +92,9 @@ public class PostController {
             List<PostDto>result=this.postService.searchPosts(keyword);
             return new ResponseEntity<List<PostDto>>(result,HttpStatus.OK);
     }
+
+    //************************** Post Image Upload ***********************************
+
+
+
 }
