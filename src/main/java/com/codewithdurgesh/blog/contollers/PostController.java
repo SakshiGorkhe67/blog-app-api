@@ -101,7 +101,7 @@ public class PostController {
     }
 
     //************************** Post Image Upload ***********************************
-    @PostMapping("/post/image/upload/{postId}")
+    @PostMapping("/posts/image/upload/{postId}")
     public ResponseEntity<PostDto>uploadPostImage(
             @RequestParam("image")MultipartFile image,@PathVariable Integer postId) throws IOException
     {
@@ -116,7 +116,7 @@ public class PostController {
 
     //******************************************* Get Image **********************
 
-    @GetMapping(value = "/post/image/{imageName}",produces= MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/posts/image/{imageName}",produces= MediaType.IMAGE_JPEG_VALUE)
     public void downloadImage(
             @PathVariable("imageName") String imageName, HttpServletResponse response) throws IOException
     {
