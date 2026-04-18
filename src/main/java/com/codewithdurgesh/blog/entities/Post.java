@@ -31,12 +31,7 @@ public class Post {
     @JoinColumn(name="category_id")
     private Category category;
 
-    @OneToMany(
-            mappedBy = "post",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER   // 🔥 FORCE LOAD COMMENTS
-    )
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();
 
 

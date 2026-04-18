@@ -19,9 +19,10 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    @JsonIgnore   // 🔥 IMPORTANT
     private Post post;
+
     @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
 
 }
