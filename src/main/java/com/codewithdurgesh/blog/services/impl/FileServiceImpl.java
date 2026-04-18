@@ -1,16 +1,17 @@
 package com.codewithdurgesh.blog.services.impl;
 
 import com.codewithdurgesh.blog.services.FileService;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
-
+@Service
 public class FileServiceImpl implements FileService {
     @Override
-    public String uploadPostImag(String path, MultipartFile file) throws IOException {
+    public String uploadPostImage(String path, MultipartFile file) throws IOException {
 
         //File name
         String name=file.getOriginalFilename();
@@ -31,7 +32,7 @@ public class FileServiceImpl implements FileService {
 
         //file copy
         Files.copy(file.getInputStream(), Paths.get(filePath));
-        return name;
+        return fileName1;
 
 
 
