@@ -1,5 +1,7 @@
 package com.codewithdurgesh.blog.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +18,10 @@ public class Comment {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
+    @JsonIgnore   // 🔥 IMPORTANT
     private Post post;
-
     @ManyToOne
-    @JoinColumn(name="user_id")
     private User user;
 
 }

@@ -10,6 +10,7 @@ import com.codewithdurgesh.blog.repositories.CategoryReporitory;
 import com.codewithdurgesh.blog.repositories.PostRepository;
 import com.codewithdurgesh.blog.repositories.UserRepository;
 import com.codewithdurgesh.blog.services.PostService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -113,6 +114,7 @@ public class PostServiceImpl implements PostService {
     }
 
     //*************************** Get Post By ID  ********************************
+    @Transactional
     @Override
     public PostDto getPostById(Integer postId) {
         Post post=this.postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","postId",postId));

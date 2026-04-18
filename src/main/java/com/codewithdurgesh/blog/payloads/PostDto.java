@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.*;
+
 @NoArgsConstructor
 @Setter
 @Getter
@@ -20,5 +21,6 @@ public class PostDto {
     private LocalDateTime addDate;
     private CategoryDto category;
     private UserDto user;
+    private Set<CommentDto> comment=new HashSet<>();
 
 }

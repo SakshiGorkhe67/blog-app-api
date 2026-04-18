@@ -1,5 +1,6 @@
 package com.codewithdurgesh.blog.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,9 +31,14 @@ public class Post {
     @JoinColumn(name="category_id")
     private Category category;
 
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER   // 🔥 FORCE LOAD COMMENTS
+    )
+    private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private Set<Comment> comment=new HashSet<>();
 
 
 
