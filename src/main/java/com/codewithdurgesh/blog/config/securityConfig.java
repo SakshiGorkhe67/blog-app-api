@@ -24,12 +24,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 
 @Configuration      //Indicates this class contains Spring Configuration beans
-@EnableWebSecurity  // Enables Sprinf Security web security features for this application
+@EnableWebSecurity  // Enables Spring Security web security features for this application
 public class securityConfig {
 
     /*
     * SecurityFilterChain Bean
-    * Purpose:Creates and returns a security filter chain that defines hot HTTP requests should be secured
+    * Purpose:Creates and returns a security filter chain that defines why HTTP requests should be secured
     *
     * @param http-HttpSecurity object used to configure security setting
     * @return-SecurityFilterChain with configures security rules
@@ -60,8 +60,8 @@ public class securityConfig {
 
   }
 
-  // @Bean
-   //protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+       // @Bean
+      //protected void configure(AuthenticationManagerBuilder auth) throws Exception {
      //   auth.userDetailsService(this.customUserDetailService).passwordEncoder(passwordEncoder());
     //}
 
