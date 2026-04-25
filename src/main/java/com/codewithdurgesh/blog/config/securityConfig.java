@@ -2,6 +2,8 @@ package com.codewithdurgesh.blog.config;
 
 
 import com.codewithdurgesh.blog.security.CustomUserDetailService;
+import com.codewithdurgesh.blog.security.JwtAuthenticationEntryPoint;
+import com.codewithdurgesh.blog.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +13,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 /*
 * SecurityConfig Class
 * Purpose: Configures Spring Security settings for the Blog App API
@@ -38,6 +43,10 @@ public class securityConfig {
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     /*
     * SecurityFilterChain Bean(Spring Security 6.0+ approach)
@@ -45,20 +54,35 @@ public class securityConfig {
     * Uses CustomUserDetails for loading user details from database
     *
     * */
+  @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-  public SecurityFilterChain securityFilterChain (HttpSecurity http)throws Exception{
-       http
-               //Disable CSRF protection (REST APIs dont need it)
-               .csrf(AbstractHttpConfigurer::disable)
-               //Authorize all http requests
-               .authorizeHttpRequests(auth->auth.anyRequest().authenticated()) //All requests require authentication
+        http
+                // Disable CSRF (for REST APIs)
+                .csrf(csrf -> csrf.disable())
 
-               //Enable HTTP Basic authentication
-               .httpBasic(Customizer.withDefaults());
+                // Exception handling (JWT entry point)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                )
 
-       return http.build();
+                // Stateless session (important for JWT)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-  }
+                // Authorization rules
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/login").permitAll() // login खुला
+                        .requestMatchers("/auth/**").permitAll()           // other public APIs
+                        .anyRequest().authenticated()
+                );
+
+        // Add JWT filter before Spring auth filter
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 
        // @Bean
       //protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -69,11 +93,14 @@ public class securityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
+
+
 
 // CSRF (Cross-Site Request Forgery) Protection Disabled
 // WHY: REST APIs don't need CSRF protection because:
