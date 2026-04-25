@@ -7,55 +7,72 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
+
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
+
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    // 🔐 LOGIN API
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request) {
+    public ResponseEntity<?> createToken(@RequestBody JwtAuthRequest request) {
 
-        // authenticate user
-        this.authenticate(request.getUsername(), request.getPassword());
+        try {
+            // authenticate user
+            this.authenticate(request.getUsername(), request.getPassword());
 
-        // load user details
-        UserDetails userDetails = this.userDetailsService
-                .loadUserByUsername(request.getUsername());
+            // load user details
+            UserDetails userDetails = this.userDetailsService
+                    .loadUserByUsername(request.getUsername());
 
-        // generate token
-        String token = this.jwtTokenHelper.generateToken(userDetails);
+            // generate JWT token
+            String token = this.jwtTokenHelper.generateToken(userDetails);
 
-        // prepare response
-        JwtAuthResponse response = new JwtAuthResponse();
-        response.setToken(token);
+            // prepare response
+            JwtAuthResponse response = new JwtAuthResponse();
+            response.setToken(token);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
+
+        } catch (DisabledException e) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("User account is disabled");
+
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Something went wrong");
+        }
     }
 
+    // 🔹 Authentication method
+    private void authenticate(String username, String password) {
 
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password);
 
-    private void authenticate(String username,String password){
-        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(username,password);
-            this.authenticationManager.authenticate(authenticationToken);
-
-
+        // This will automatically throw:
+        // BadCredentialsException / DisabledException
+        authenticationManager.authenticate(authenticationToken);
     }
-
-
-
-
 }
