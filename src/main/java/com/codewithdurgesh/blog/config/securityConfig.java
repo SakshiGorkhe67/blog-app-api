@@ -73,7 +73,7 @@ public class securityConfig {
 
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/login").permitAll() // login खुला
+                        .requestMatchers("/api/v1/auth/**").permitAll() // login खुला
                         .requestMatchers("/auth/**").permitAll()           // other public APIs
                         .anyRequest().authenticated()
                 );

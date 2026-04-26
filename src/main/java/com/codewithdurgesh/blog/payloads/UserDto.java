@@ -1,8 +1,12 @@
 package com.codewithdurgesh.blog.payloads;
+import com.codewithdurgesh.blog.entities.Role;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -22,4 +26,6 @@ public class UserDto {
     private String password;
     @NotEmpty(message = "About Should not be Empty")
     private String about;
+
+    private Set<RoleDto> roles = new HashSet<>();
 }

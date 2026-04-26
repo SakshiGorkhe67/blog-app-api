@@ -2,7 +2,9 @@ package com.codewithdurgesh.blog.contollers;
 
 import com.codewithdurgesh.blog.payloads.JwtAuthRequest;
 import com.codewithdurgesh.blog.payloads.JwtAuthResponse;
+import com.codewithdurgesh.blog.payloads.UserDto;
 import com.codewithdurgesh.blog.security.JwtTokenHelper;
+import com.codewithdurgesh.blog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserService userService;
 
     // 🔐 LOGIN API
     @PostMapping("/login")
@@ -75,4 +79,13 @@ public class AuthController {
         // BadCredentialsException / DisabledException
         authenticationManager.authenticate(authenticationToken);
     }
+
+   //register new user api
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+
+     UserDto registeredUser=this.userService.registerNewUser(userDto);
+     return new ResponseEntity<UserDto>(registeredUser,HttpStatus.CREATED);
+    }
+
 }

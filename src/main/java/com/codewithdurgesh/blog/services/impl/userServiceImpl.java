@@ -1,10 +1,12 @@
 package com.codewithdurgesh.blog.services.impl;
 
+import com.codewithdurgesh.blog.config.AppConstants;
 import com.codewithdurgesh.blog.entities.User;
 import com.codewithdurgesh.blog.payloads.UserDto;
 import com.codewithdurgesh.blog.services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.codewithdurgesh.blog.repositories.*;
@@ -12,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.codewithdurgesh.blog.entities.*;
 import com.codewithdurgesh.blog.exceptions.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,8 +23,26 @@ public class userServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleRepository roleRepository;
 
-//=====================Create User==================================
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+       User user= this.modelMapper.map(userDto,User.class);
+       //encoded password
+       user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+       //roles
+       Role role=this.roleRepository.findById(AppConstants.NORMAL_USER).get();
+
+       user.getRoles().add(role);
+
+      User newuser= this.userRepository.save(user);
+      return this.modelMapper.map(newuser,UserDto.class);
+    }
+
+    //=====================Create User==================================
     @Override
     public UserDto createUser(UserDto userDto) {
         User user=this.dtoToUser(userDto);
