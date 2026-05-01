@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /*
 * SecurityConfig Class
@@ -29,6 +30,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @Configuration      //Indicates this class contains Spring Configuration beans
 @EnableWebSecurity  // Enables Spring Security web security features for this application
+@EnableWebMvc
 @EnableMethodSecurity(prePostEnabled = true)
 public class securityConfig {
 
@@ -75,6 +77,7 @@ public class securityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll() // login खुला
                         .requestMatchers("/auth/**").permitAll()           // other public APIs
+                        .requestMatchers("/v3/api-docs").permitAll()
                         .anyRequest().authenticated()
                 );
 
